@@ -1,0 +1,88 @@
+docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=rootpass -e MYSQL_DATABASE=team-member-projects -e MYSQL_USER=admin -e MYSQL_PASSWORD=adminpass -d mysql
+docker run -p 80:80 --name myadmin -d --link mysql:db  phpmyadmin
+
+./gradlew build 
+
+export DB_USER=admin
+export DB_PWD=adminpass
+export DB_SERVER=localhost
+export DB_NAME=team-member-projects
+
+java -jar build/libs/bootcamp-java-mysql-project-1.0-SNAPSHOT.jar
+
+
+in file src/..../DatabaseConfig.java
+#datasource.setURL("jdbc:mysql://localhost:3306/ "); 
+
+
+
+docker run -p 8081:81 --name myadmin -d --link mysql:db  phpmyadmin
+
+Supriyas-MacBook-Pro:bootcamp-java-mysql supriya$ echo $DB_SERVER
+localhost
+Supriyas-MacBook-Pro:bootcamp-java-mysql supriya$ env
+TERM_PROGRAM=Apple_Terminal
+DB_NAME=team-member-projects
+SHELL=/bin/bash
+TERM=xterm-256color
+TMPDIR=/var/folders/nc/rn6hwl_d3xjcbcyl1bvgwkdr0000gn/T/
+TERM_PROGRAM_VERSION=433
+OLDPWD=/Users/supriya
+TERM_SESSION_ID=59F75B85-98CC-4F0B-8122-038989A35AA2
+USER=supriya
+SSH_AUTH_SOCK=/private/tmp/com.apple.launchd.kuR7Yezhkq/Listeners
+PATH=/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/Library/Frameworks/Mono.framework/Versions/Current/Commands
+LaunchInstanceID=29172DE5-2B59-49C9-9FA3-DA086F6E96AF
+PWD=/Users/supriya/bootcamp-projects/docker-module/bootcamp-java-mysql
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-15.jdk/Contents/Home
+LANG=en_US.UTF-8
+XPC_FLAGS=0x0
+DB_PWD=adminpass
+XPC_SERVICE_NAME=0
+DB_SERVER=localhost
+SHLVL=1
+HOME=/Users/supriya
+LOGNAME=supriya
+DB_USER=admin
+SECURITYSESSIONID=186a6
+_=/usr/bin/env
+Supriyas-MacBook-Pro:bootcamp-java-mysql supriya$ 
+Supriyas-MacBook-Pro:bootcamp-java-mysql supriya$ docker ps -a 
+CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS                            PORTS                               NAMES
+7d2351bdbf43   phpmyadmin   "/docker-entrypoint.…"   38 minutes ago   Exited (255) About a minute ago   0.0.0.0:80->80/tcp                  myadmin
+a37fbe98039c   mysql        "docker-entrypoint.s…"   3 hours ago      Exited (255) About a minute ago   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
+
+
+--- 
+services: 
+  myadmin: 
+    image: phpmyadmin
+    restart: always
+    ports: 
+      - 80:80
+    environment:
+      PMA_HOST: mysql
+  mysql: 
+    environment: 
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: team-member-projects
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: adminpass
+    image: mysql
+    ports: 
+      - 3306:3306
+    restart: always
+
+
+    CMD ["java", "-jar", "app/bootcamp-java-mysql-project-1.0-SNAPSHOT.jar"]
+
+volumes:
+  mysql-vol:
+    driver: local    
+
+version: "3"
+
+
+
+
+
