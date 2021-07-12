@@ -1,18 +1,40 @@
 docker run -p 3306:3306 --name mysql -e MYSQL_ROOT_PASSWORD=rootpass -e MYSQL_DATABASE=team-member-projects -e MYSQL_USER=admin -e MYSQL_PASSWORD=adminpass -d mysql
 docker run -p 80:80 --name myadmin -d --link mysql:db  phpmyadmin
 
+docker run -p 8080:8080 -e DB_USER=admin -e DB_PWD=adminpass -e DB_SERVER=localhost -e DB_NAME=team-member-projects --name myapp -d myapp:1.0
+
+-----------------------------------------
+Steps - 
+
+export DB_USER=user
+export DB_PWD=pass
+export DB_SERVER=mysql
+export DB_NAME=my-app-db
+export MYSQL_ROOT_PASSWORD=my-secret-pw
+export MYSQL_DATABASE=my-app-db
+export MYSQL_USER=user
+export MYSQL_PASSWORD=pass
+export PMA_HOST=mysql
+export PMA_PORT=3306
+export MYSQL_ROOT_PASSWORD=my-secret-pw
+
+
 ./gradlew build 
 
-export DB_USER=admin
-export DB_PWD=adminpass
-export DB_SERVER=localhost
-export DB_NAME=team-member-projects
+docker-compose -f server01.yaml up
+
+Enable ports - 8083 & 8080 on EC2-> Security groups -> Inbound Rules 
+
+http://AWS_Public_IP:PORT_TO_ACCESS/ will open up the page
+
+-----------------------------------------
 
 java -jar build/libs/bootcamp-java-mysql-project-1.0-SNAPSHOT.jar
 
 
 in file src/..../DatabaseConfig.java
 #datasource.setURL("jdbc:mysql://localhost:3306/ "); 
+
 
 
 
@@ -53,6 +75,7 @@ CONTAINER ID   IMAGE        COMMAND                  CREATED          STATUS    
 a37fbe98039c   mysql        "docker-entrypoint.s…"   3 hours ago      Exited (255) About a minute ago   0.0.0.0:3306->3306/tcp, 33060/tcp   mysql
 
 
+
 --- 
 services: 
   myadmin: 
@@ -81,6 +104,13 @@ volumes:
     driver: local    
 
 version: "3"
+
+
+
+
+
+
+
 
 
 
